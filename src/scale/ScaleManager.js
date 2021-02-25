@@ -269,6 +269,17 @@ var ScaleManager = new Class({
         this.displayScale = new Vector2(1, 1);
 
         /**
+         * If set, the resolution of the game will correspond to the physical
+         * resolution under the RESIZE scaling mode. This avoids blurry visuals
+         * on high resolution devices.
+         *
+         * @name Phaser.Scale.ScaleManager#dprResize
+         * @type {boolean}
+         * @since 
+         */
+        this.dprResize = false;
+
+        /**
          * If set, the canvas sizes will be automatically passed through Math.floor.
          * This results in rounded pixel display values, which is important for performance on legacy
          * and low powered devices, but at the cost of not achieving a 'perfect' fit in some browser windows.
@@ -481,6 +492,7 @@ var ScaleManager = new Class({
         var height = config.height;
         var scaleMode = config.scaleMode;
         var zoom = config.zoom;
+        var dprResize = config.dprResize;
         var autoRound = config.autoRound;
 
         //  If width = '100%', or similar value
@@ -516,6 +528,8 @@ var ScaleManager = new Class({
         }
 
         this.scaleMode = scaleMode;
+
+        this.dprResize = dprResize;
 
         this.autoRound = autoRound;
 
@@ -999,21 +1013,37 @@ var ScaleManager = new Class({
             //  This will constrain using min/max
             this.displaySize.setSize(this.parentSize.width, this.parentSize.height);
 
-            this.gameSize.setSize(this.displaySize.width, this.displaySize.height);
+            var size = new Phaser.Structs.Size();
+            size.setSize(this.displaySize.width, this.displaySize.height);
+            
+            if (this.dprResize) {
+                size.setSize(this.displaySize.width*window.devicePixelRatio, this.displaySize.height*window.devicePixelRatio);
+            }
 
-            this.baseSize.setSize(this.displaySize.width, this.displaySize.height);
+            this.gameSize.setSize(size.width, size.height);
+
+            this.baseSize.setSize(size.width, size.height);
 
             styleWidth = this.displaySize.width;
             styleHeight = this.displaySize.height;
+
+            var canvasWidth = this.baseSize.width;
+            var canvasHeight = this.baseSize.height;
 
             if (autoRound)
             {
                 styleWidth = Math.floor(styleWidth);
                 styleHeight = Math.floor(styleHeight);
+
+                canvasWidth = Math.floor(canvasWidth);
+                canvasHeight = Math.floor(canvasHeight);
             }
 
-            this.canvas.width = styleWidth;
-            this.canvas.height = styleHeight;
+            style.width = styleWidth + 'px';
+            style.height = styleHeight + 'px';
+
+            this.canvas.width = canvasWidth;
+            this.canvas.height = canvasHeight;
         }
         else
         {

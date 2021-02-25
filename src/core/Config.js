@@ -77,6 +77,11 @@ var Config = new Class({
         this.expandParent = GetValue(config, 'expandParent', true);
 
         /**
+         * @const {boolean} Phaser.Core.Config#dprResize - Takes the device pixel ratio into consideration when using the RESIZE scaling mode.
+         */
+        this.dprResize = GetValue(config, 'dprResize', false);
+
+        /**
          * @const {boolean} Phaser.Core.Config#autoRound - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
          */
         this.autoRound = GetValue(config, 'autoRound', false);
@@ -128,6 +133,7 @@ var Config = new Class({
             this.parent = GetValue(scaleConfig, 'parent', this.parent);
             this.scaleMode = GetValue(scaleConfig, 'mode', this.scaleMode);
             this.expandParent = GetValue(scaleConfig, 'expandParent', this.expandParent);
+            this.dprResize = GetValue(scaleConfig, 'dprResize', this.dprResize);
             this.autoRound = GetValue(scaleConfig, 'autoRound', this.autoRound);
             this.autoCenter = GetValue(scaleConfig, 'autoCenter', this.autoCenter);
             this.resizeInterval = GetValue(scaleConfig, 'resizeInterval', this.resizeInterval);
